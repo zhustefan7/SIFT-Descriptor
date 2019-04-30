@@ -194,7 +194,7 @@ def plotMatches(im1, im2, matches, locs1, locs2):
 
 if __name__ == '__main__':
     # test makeTestPattern
-    # compareX, compareY = makeTestPattern()
+    compareX, compareY = makeTestPattern()
     # test briefLite
     # im = cv2.imread('../data/model_chickenbroth.jpg')
     # im = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
@@ -212,8 +212,8 @@ if __name__ == '__main__':
     # im2 = cv2.imread('../data/chickenbroth_03.jpg')
     # im1 = cv2.imread('../data/incline_L.png')
     # im2 = cv2.imread('../data/incline_R.png')
-    im1 = cv2.imread('../data/pf_scan_scaled.jpg')
-    im2 = cv2.imread('../data/pf_stand.jpg')
+    im1 = cv2.imread('../data/model_chickenbroth.jpg')
+    im2 = cv2.imread('../data/chickenbroth_01.jpg')
     locs1, desc1 = briefLite(im1)
     locs2, desc2 = briefLite(im2)
 

@@ -1,6 +1,6 @@
 from keypointDetect import*
 import math
-
+import numpy as np
 
 
 ## This function takes a rectangular window around the keypoints
@@ -58,13 +58,27 @@ def grad_mag_orient(im , locsDoG):
 	return result
 
 
+# my_grad_mag_orientation: Takes in image and calculate the gradient magnitude
+#						   and orientation for each pixel
+# return: magnitudes->HxWxL matrix with gradient magnitudes
+#		  orientation->HxWxL matrix with gradient orientations, range is (0,36)
+def my_grad_mag_orientation(locsDoG, gauss_pyramid):
+	H = gauss_pyramid.shape[0]
+	W = gauss_pyramid.shape[1]
+	level_num = gauss_pyramid.shape[2]
 
+	magnitudes = np.zeros((gauss_pyramid.shape[0], gauss_pyramid.shape[1], level_num))
+	orientations = np.zeros((gauss_pyramid.shape[0], gauss_pyramid.shape[1], level_num))
 
-
-
-
-
-
+	for l in range(0, level_num):
+		im = gauss_pyramid[:,:,l]
+		for r in range(0, H-1):
+			for c in range(0, W-1):
+				magnitudes[r,c,l] = ((im[r+1,c]-im[r-1,c])**2 + 
+									(im[r,c+1]-im[r,c-1])**2) ** 0.5
+				orientations[r,c,l] = (36 / (2*np.pi)) * np.arctan2((im[r+1,c]-im[r-1,c]), 
+																	(im[r,c+1]-im[r,c-1]))
+	return magnitudes, orientations
 
 
 
@@ -76,4 +90,9 @@ if __name__ == '__main__':
 
     locsDoG, gauss_pyramid= DoGdetector(im, sigma0=1, k=np.sqrt(2), levels=[-1,0,1,2,3,4], 
                 th_contrast=0.03, th_r=12)
-    grad_mag_orient(gray, locsDoG)
+
+    # result = grad_mag_orient(gray, locsDoG)
+    WINDOW_SIZE = 5
+	# get the gradient magnitude and orientation for each level of the gaussien pyramid
+    gradient_mag, gradient_orientation = my_grad_mag_orientation(locsDoG, gauss_pyramid)
+    
